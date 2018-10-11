@@ -1,9 +1,24 @@
-﻿  Enemy.cpp
-c:\users\gameuser\desktop\labs\lab1\lab1\enemy.cpp(17): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\gameuser\desktop\labs\lab1\lab1\enemy.cpp(36): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  Game.cpp
-c:\users\gameuser\desktop\labs\lab1\lab1\game.cpp(46): warning C4244: '-=': conversion from 'const double' to 'sf::Int32', possible loss of data
-  Source.cpp
-c:\users\gameuser\desktop\labs\lab1\lab1\source.cpp(1): warning C4067: unexpected tokens following preprocessor directive - expected a newline
-  Generating Code...
+﻿  EnemyPursue.cpp
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(7): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(29): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(64): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(69): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(92): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(102): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(103): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(104): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(121): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(122): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(125): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(155): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(156): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(157): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(197): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(198): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(199): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(212): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(213): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(214): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(221): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\gameuser\desktop\labs\lab1\lab1\enemypursue.cpp(376): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
   Lab1.vcxproj -> C:\Users\gameuser\Desktop\Labs\Lab1\Debug\Lab1.exe
