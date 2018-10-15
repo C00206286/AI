@@ -14,7 +14,7 @@ Game::Game()
 	m_enemyArrive = new EnemyPursue(*this, 0.4,1000,1, 200, 200);
 	m_enemyArrive2 = new EnemyPursue(*this,0.9,2000,1, 600, 900);
 	m_enemy2 = new EnemyPursue(*this,0.5,1000,2, 900, 200);
-	m_enemy3 = new EnemyPursue(*this,0.7,1000,3, 450, 450);
+	m_enemy3 = new EnemyPursue(*this,0.5,1000,3, 450, 450);
 	m_enemyPursue = new EnemyPursue(*this, 0.5, 1000,4, 1000, 1000);
 
 }

@@ -17,6 +17,7 @@ public:
 	void Pursue();
 	void seekTarget(sf::Vector2f);
 	void fleeTarget(sf::Vector2f);
+	void LeaveTarget(sf::Vector2f);
 	sf::Vector2f getPursuePosition();
 
 
@@ -35,6 +36,9 @@ private:
 	int radius;
 	sf::Texture enemyTexture;
 	sf::Sprite enemySprite;
+	sf::ConvexShape coneTriangle;
+	float coneAngle;
+	float coneLength;
 	double x;
 	double y;
 	double rotation;

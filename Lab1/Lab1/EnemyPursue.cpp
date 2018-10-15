@@ -2,27 +2,29 @@
 #include <math.h>
 #include <iostream>
 
-EnemyPursue::EnemyPursue(Game &game, double maxSpeed, float timeToTarget, int behaviour,int positionX, int positionY) :
+EnemyPursue::EnemyPursue(Game &game, double maxSpeed, float timeToTarget, int behaviour, int positionX, int positionY) :
 	m_game(&game),
 	position(positionX, positionY),
 	velocity(0, 0),
 	radius(50),
 	maxSpeed(maxSpeed),
 	rotation(0.1),
-	direction(0,0),
+	direction(0, 0),
 	speed(0),
 	distance(0),
 	timeToTarget(timeToTarget),
 	maxTimePrediction(200),
 	timePrediction(0),
-	newTarget(0,0),
+	newTarget(0, 0),
 	angle(0),
-	wanderOffset(100),
+	wanderOffset(200),
 	wanderRate(1),
 	wanderRadius(10),
 	moved(false),
 	behaviour(behaviour),
-	count(0)
+	coneAngle(90),
+	count(0),
+	coneLength(100)
 	//0.5
 	//1000
 {
@@ -45,6 +47,18 @@ EnemyPursue::EnemyPursue(Game &game, double maxSpeed, float timeToTarget, int be
 	enemySprite.setScale(0.3f, 0.3f);
 	enemySprite.setTexture(enemyTexture);
 	enemySprite.setPosition(position);
+
+	coneTriangle.setPointCount(3);
+
+	float hypotenuse = coneLength / cos(coneAngle / 2);
+	float opposite = sqrt((hypotenuse * hypotenuse) - (coneLength * coneLength));
+	coneTriangle.setPoint(0, sf::Vector2f(0, 0));
+	coneTriangle.setPoint(1, sf::Vector2f(coneLength, -opposite));
+	coneTriangle.setPoint(2, sf::Vector2f(coneLength,opposite));
+	//coneTriangle.setRotation(rotation);
+
+	coneTriangle.setFillColor(sf::Color::Green);
+
 
 	if(!font.loadFromFile("font.ttf"))
 	{
@@ -125,6 +139,7 @@ void EnemyPursue::Arrive()
 		rotation = getNewOrientation(rotation, velocity);
 	}
 }
+
 void EnemyPursue::Pursue()
 {
 
@@ -168,18 +183,20 @@ void EnemyPursue::coneOfVision(sf::Vector2f targetPosition)
 
 	double DirectionMeToVelocity = atan2((velocity.y + enemySprite.getPosition().y) - enemySprite.getPosition().y, (velocity.x + enemySprite.getPosition().x) - enemySprite.getPosition().x);
 	double DirectionEnemyToMe = atan2(targetPosition.y - enemySprite.getPosition().y, targetPosition.x - enemySprite.getPosition().x);
-	double Angle_ACB = DirectionMeToVelocity - DirectionEnemyToMe;
+	double Angle_MeVelocityMePosEnemyPos = DirectionMeToVelocity - DirectionEnemyToMe;
 
 
 	const double Pi = acos(-1);  
-	if (Angle_ACB > Pi) Angle_ACB -= 2 * Pi;
-	else if (Angle_ACB < -Pi) Angle_ACB += 2 * Pi;
+	if (Angle_MeVelocityMePosEnemyPos > Pi) Angle_MeVelocityMePosEnemyPos -= 2 * Pi;
+	else if (Angle_MeVelocityMePosEnemyPos < -Pi) Angle_MeVelocityMePosEnemyPos += 2 * Pi;
 
-	Angle_ACB = Angle_ACB * 180 / 3.14;
-	if (Angle_ACB < 90 && Angle_ACB > -90)
+	Angle_MeVelocityMePosEnemyPos = Angle_MeVelocityMePosEnemyPos * 180 / 3.14;
+	if (Angle_MeVelocityMePosEnemyPos < coneAngle && Angle_MeVelocityMePosEnemyPos > -coneAngle)
 	{
-		if (getDistance(enemySprite.getPosition(), targetPosition) < 100)
+		if (getDistance(enemySprite.getPosition(), targetPosition) < coneLength)
 		{
+			coneTriangle.setFillColor(sf::Color::Red);
+			fleeFrom = targetPosition;
 			fleeBool = true;
 		}
 	}
@@ -190,19 +207,41 @@ float EnemyPursue::dotProduct(sf::Vector2f vector1, sf::Vector2f vector2)
 	return dotProduct;
 }
 
-void EnemyPursue::fleeTarget(sf::Vector2f targi)
+void EnemyPursue::fleeTarget(sf::Vector2f target)
 {
-	velocity = enemySprite.getPosition() - targi;
+	velocity = enemySprite.getPosition() - target;
 	velocity = normalise(velocity);
-	velocity.x = velocity.x * maxSpeed;
-	velocity.y = velocity.y * maxSpeed;
+	velocity.x = velocity.x * (maxSpeed * 0.2);
+	velocity.y = velocity.y * (maxSpeed * 0.2);
 	rotation = getNewOrientation(rotation, velocity);
 	fleeCount = fleeCount + 1;
-	if (fleeCount > 500)
+	if (fleeCount > 100)
 	{
 		fleeBool = false;
 		fleeCount = 0;
 	}
+}
+void EnemyPursue::LeaveTarget(sf::Vector2f target)
+{
+	velocity = enemySprite.getPosition() - target;
+
+		velocity = velocity / timeToTarget;
+		if (length(velocity) > maxSpeed)
+		{
+			velocity = normalise(velocity);
+			velocity.x = velocity.x * maxSpeed;
+			velocity.y = velocity.y * maxSpeed;
+		}
+
+		rotation = getNewOrientation(rotation, velocity);
+		fleeCount = fleeCount + 1;
+		if (fleeCount > 800)
+		{
+			coneTriangle.setFillColor(sf::Color::Green);
+			fleeBool = false;
+			fleeCount = 0;
+		}
+	
 }
 
 void EnemyPursue::seekTarget(sf::Vector2f targ)
@@ -283,32 +322,31 @@ void EnemyPursue::findClosest()
 	if (distance1 < distance2 && distance1 < distance3 && distance1 < distance4 && distance1 < distance5)
 	{
 		coneOfVision(m_game->getEnemyPosition());
-		fleeFrom = m_game->getEnemyPosition();
 	}
 	if (distance2 < distance1 && distance2 < distance3 && distance2 < distance4 && distance2 < distance5)
 	{
 		coneOfVision(m_game->getEnemy2Position());
-		fleeFrom = m_game->getEnemy2Position();
 	}
 	if (distance3 < distance2 && distance3 < distance1 && distance3 < distance4 && distance3 < distance5)
 	{
 		coneOfVision(m_game->getEnemy3Position());
-		fleeFrom = m_game->getEnemy3Position();
 	}
 	if (distance4 < distance2 && distance4 < distance1 && distance4 < distance3 && distance4 < distance5)
 	{
 		coneOfVision(m_game->getEnemy4Position());
-		fleeFrom = m_game->getEnemy4Position();
 	}
 	if (distance5 < distance1 && distance5 < distance2 && distance5 < distance3 && distance5 < distance4)
 	{
 		coneOfVision(m_game->getEnemyPursuePosition());
-		fleeFrom = m_game->getEnemyPursuePosition();
 	}
 }
 void EnemyPursue::update(double dt)
 {
 	enemyText.setPosition(enemySprite.getPosition().x - 40, enemySprite.getPosition().y + 50);
+
+	coneTriangle.setPosition(enemySprite.getPosition());
+	coneTriangle.setRotation(rotation + 90);
+
 	if (behaviour == 4)
 	{
 		enemyText.setString("Pursue");
@@ -319,7 +357,7 @@ void EnemyPursue::update(double dt)
 		}
 		if (fleeBool == true)
 		{
-			fleeTarget(fleeFrom);
+			LeaveTarget(fleeFrom);
 		}
 		
 	}
@@ -342,7 +380,7 @@ void EnemyPursue::update(double dt)
 		}
 		if (fleeBool == true)
 		{
-			fleeTarget(fleeFrom);
+			LeaveTarget(fleeFrom);
 		}
 	}
 	if (behaviour == 1)
@@ -355,7 +393,7 @@ void EnemyPursue::update(double dt)
 		}
 		if (fleeBool == true)
 		{
-			fleeTarget(fleeFrom);
+			LeaveTarget(fleeFrom);
 		}
 	}
 	if (behaviour == 2)
@@ -368,7 +406,7 @@ void EnemyPursue::update(double dt)
 		}
 		if (fleeBool == true)
 		{
-			fleeTarget(fleeFrom);
+			LeaveTarget(fleeFrom);
 		}
 	}
 
@@ -397,4 +435,5 @@ void EnemyPursue::draw(sf::RenderWindow & window)
 {
 	window.draw(enemySprite);
 	window.draw(enemyText);
+	window.draw(coneTriangle);
 }
