@@ -19,6 +19,7 @@ public:
 	void fleeTarget(sf::Vector2f);
 	void LeaveTarget(sf::Vector2f);
 	sf::Vector2f getPursuePosition();
+	bool drawTriangle = true;
 
 
 private:

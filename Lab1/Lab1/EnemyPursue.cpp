@@ -430,10 +430,24 @@ void EnemyPursue::update(double dt)
 	{
 		enemySprite.setPosition(enemySprite.getPosition().x, 2200);
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+	{
+		if (drawTriangle == true)
+		{
+			drawTriangle = false;
+		}
+		else if (drawTriangle == false)
+		{
+			drawTriangle = true;
+		}
+	}
 }
 void EnemyPursue::draw(sf::RenderWindow & window)
 {
 	window.draw(enemySprite);
 	window.draw(enemyText);
-	window.draw(coneTriangle);
+	if (drawTriangle == true)
+	{
+		window.draw(coneTriangle);
+	}
 }
